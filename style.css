@@ -1,0 +1,21 @@
+.heading{
+    width:100%;
+    text-align: center;
+}
+.heading h3{
+    display: inline;
+    font-family: 'WaltographRegular';
+   font-weight: normal;
+   font-style: normal;
+}
+.heading button{
+    float:right;
+    border:1px solid white;
+}
+.big_image{
+    width:100%;
+}
+#start, #status{
+    font-size:25px;
+    color:black;
+}
