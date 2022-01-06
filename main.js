@@ -4,6 +4,16 @@
 var paddle2 =10,paddle1=10;
 
 var paddle1X = 10,paddle1Height = 110;
+/**/
+paddle1Y=110;
+rightWristY="";
+rightWristX="";
+scoreRightWrist="";
+game_status="";  
+
+
+
+
 var paddle2Y = 685,paddle2Height = 70;
 
 var score1 = 0, score2 =0;
@@ -20,15 +30,44 @@ var ball = {
     dx:3,
     dy:3
 }
-
+/**/
 function setup(){
-  var canvas =  createCanvas(700,600);
+  
+  canvas= createCanvas(700, 600);
+  video = createCapture(VIDEO);
+  video.size(800,400);
+  video.parent('canvas');
+  video.hide();
+
+
+  poseNet = ml5.poseNet(video, modelLoaded);
+  poseNet.on('pose', gotPoses);
+}
+function gotPoses(results)
+{
+  if(results.length > 0)
+  {
+    console.log(results);
+    rightWristY = results[0].pose.rightWrist.y;
+    rightWristX = results[0].pose.rightWrist.x;
+    scoreRightWrist=results[0].pose.rightWrist.score;
+    console.log(scoreRightWrist);
+  }
+}
+function modelLoaded() {
+  console.log('Model Loaded!');
 }
 
 
-function draw(){
 
+function draw(){
+  if(scoreRightWrist>0.2){
+    fill("red");
+    stroke("black");
+    circle(rightWristX, rightWristY, 10);
+  }
  background(0); 
+ image(video,0,0,700,600);
 
  fill("black");
  stroke("black");
@@ -37,7 +76,13 @@ function draw(){
  fill("black");
  stroke("black");
  rect(0,0,20,700);
- 
+
+ function startGame()
+{
+  game_status = "start";
+  document.getElementById("status").innerHTML = "Game Is Loading";
+}
+
    //funtion paddleInCanvas call 
    paddleInCanvas();
  
@@ -45,7 +90,12 @@ function draw(){
    fill(250,0,0);
     stroke(0,0,250);
     strokeWeight(0.5);
-   paddle1Y = mouseY; 
+   if(paddle1Y<250){
+     paddle1Y=paddle1Y-1;
+   }
+   if(paddle1Y>250){
+    paddle1Y=paddle1Y+1;
+  }
    rect(paddle1X,paddle1Y,paddle1,paddle1Height,100);
    
    
